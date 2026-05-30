@@ -1,3 +1,4 @@
+import sys
 import tkinter as tk
 from tkinter import filedialog
 from pathlib import Path
@@ -6,9 +7,12 @@ import os
 def get_folder_path(window_title, message="Please select a folder"):
     root = tk.Tk()
     root.withdraw()  # Hide the main window
-    folder_path = filedialog.askdirectory(title=window_title, message=message)
-    return folder_path
 
+    if sys.platform.system() == "Darwin":  # macOS supports the message option
+        folder_path = filedialog.askdirectory(title=window_title, message=message)
+    else:  # Windows and Linux do not
+        folder_path = filedialog.askdirectory(title=window_title)
+    return folder_path
 
 def compare_files_in_folders(folder1, folder2):
     files_in_folder1 = {f for f in os.listdir(folder1) if Path(folder1, f).is_file()}
